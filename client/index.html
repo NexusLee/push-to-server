@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Mail-MQ</title>
+	<script type="text/javascript"
+			src="http://127.0.0.1:4567/faye/client.js">
+	</script>
+	<script type="text/javascript">
+		var client = new Faye.Client('http://127.0.0.1:4567/faye', {
+			timeout : 120,
+			retry		: 5
+		});
+		var time = new Date().getTime(), MAX = 1000, n = 0;;
+
+		var timer = setInterval(function() {
+			if (n === MAX) return stop();
+			console.log(n)
+			n++;
+			//var subscription = client.publish('/pos', function (message) {
+				// handle message
+			//	console.log(message);
+			//});
+			var publication = client.publish('/pos', {text: 'Hi there, foo test'});
+			publication.then(function() {
+				//console.log("success")
+			}, function(error) {
+				console.log(error)
+				//alert('There was a problem: ' + error.message);
+			});
+		},0);
+		var stop = function() {
+			console.log(new Date().getTime() - time);
+			clearInterval(timer)
+		};
+		/*setTimeout(function(){
+		 var publication = client.publish('/foo', {text: 'Hi there, foo test'});
+
+		 publication.then(function() {
+		 alert('Message received by server!');
+		 }, function(error) {
+		 alert('There was a problem: ' + error.message);
+		 });
+
+		 },2000);*/
+	</script>
+</head>
+<body>
+你有0封邮件
+</body>
+</html>
